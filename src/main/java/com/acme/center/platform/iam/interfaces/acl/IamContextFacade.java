@@ -7,9 +7,12 @@ import com.acme.center.platform.iam.domain.model.queries.GetUserByUsernameQuery;
 import com.acme.center.platform.iam.domain.services.UserCommandService;
 import com.acme.center.platform.iam.domain.services.UserQueryService;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * IamContextFacade
@@ -19,7 +22,7 @@ import java.util.List;
  *     This class is a part of the ACL layer.
  * </p>
  *
- */
+ */@Service
 public class IamContextFacade {
     private final UserCommandService userCommandService;
     private final UserQueryService userQueryService;
@@ -80,6 +83,13 @@ public class IamContextFacade {
         var result = userQueryService.handle(getUserByIdQuery);
         if (result.isEmpty()) return Strings.EMPTY;
         return result.get().getUsername();
+    }
+
+    public Set<Role> fetchRolesByUserId(Long userId) {
+        var getUserByIdQuery = new GetUserByIdQuery(userId);
+        var result = userQueryService.handle(getUserByIdQuery);
+        if (result.isEmpty()) return new HashSet<>();
+        return result.get().getRoles();
     }
 
 }

@@ -28,7 +28,7 @@ public class Role {
     }
 
     public static Role getDefaultRole() {
-        return new Role(Roles.LIBRARIAN);
+        return new Role(Roles.ROLE_LIBRARIAN);
     }
 
     public static Role toRoleFromName(String name) {

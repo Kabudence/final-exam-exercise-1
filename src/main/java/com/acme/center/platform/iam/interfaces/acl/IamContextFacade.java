@@ -36,7 +36,7 @@ public class IamContextFacade {
      * @return The id of the created user.
      */
     public Long createUser(String username, String password) {
-        var signUpCommand = new SignUpCommand(username, password, List.of("ROLE_USER"));
+        var signUpCommand = new SignUpCommand(username, password, List.of("LIBRARIAN"));
         var result = userCommandService.handle(signUpCommand);
         if (result.isEmpty()) return 0L;
         return result.get().getId();

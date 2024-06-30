@@ -12,6 +12,7 @@ import lombok.Getter;
 
 import java.util.Date;
 
+
 @Entity
 public class Books extends AuditableAbstractAggregateRoot<Books> {
 
@@ -43,7 +44,10 @@ public class Books extends AuditableAbstractAggregateRoot<Books> {
     @ManyToOne
     private Genre genre;
 
-
+    /**
+     *  Constructor to create a new book
+     *  @param command containing book details
+      */
     public Books (CreateBooksCommand command){
         this.isbn = command.isbn();
         this.title = command.title();
@@ -54,6 +58,11 @@ public class Books extends AuditableAbstractAggregateRoot<Books> {
 
     }
 
+    /**
+     * Updates the book information
+     * @param command containing book details
+     * @return Books
+     */
     public Books updateInformation(UpdateBooksCommand command) {
         this.isbn = command.isbn();
         this.title = command.title();
@@ -64,11 +73,17 @@ public class Books extends AuditableAbstractAggregateRoot<Books> {
         return this;
     }
 
-
+    /**
+     * Default constructor
+     */
     public Books() {
 
     }
 
+    /**
+     * Get the genre name
+     * @return genre name
+     */
 
     public String getGenreName() {
         return genre.getName().toString();

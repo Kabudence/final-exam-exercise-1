@@ -17,7 +17,10 @@ public class GenreCommandServiceImpl implements GenreCommandService {
     public GenreCommandServiceImpl(GenreRepository genreRepository) {
         this.genreRepository = genreRepository;
     }
-
+    /**
+     * Command handler to send genre
+     * @param command containing genre details
+     **/
     @Override
     public void handle(SendGenreCommand command) {
         Arrays.stream(GenreTypes.values()).forEach(name -> {

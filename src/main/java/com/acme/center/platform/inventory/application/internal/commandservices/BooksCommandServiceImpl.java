@@ -21,6 +21,11 @@ public class BooksCommandServiceImpl implements BookCommandService {
         this.bookRepository = bookRepository;
     }
 
+/**
+ * Command handler to create book
+ * @param command containing book details
+ * @return Books
+   */
     @Override
     public Optional<Books> handle(CreateBooksCommand command) {
         validation(command.isbn(), command.publishedDate(), command.status());
@@ -29,6 +34,11 @@ public class BooksCommandServiceImpl implements BookCommandService {
         return Optional.of(bookEntity);
 
     }
+    /**
+     * Command handler to update book
+     * @param command containing book details
+     * @return Books
+     * */
     @Override
     public Optional<Books> handle(UpdateBooksCommand command) {
         validation(command.isbn(), command.publishedDate(), command.status());
@@ -43,7 +53,12 @@ public class BooksCommandServiceImpl implements BookCommandService {
             throw new IllegalArgumentException("Error while updating book: " + e.getMessage());
         }
     }
-
+    /**
+     * Validation method to check if the book already exists, if the publishDate is before the currentDate and if the status already exists
+     * @param isbn
+     * @param date
+     * @param status
+      **/
     private void validation(String isbn, Date date, BookStatus status) {
         Date currentDate = new Date();
         if(bookRepository.existsByIsbn(isbn))

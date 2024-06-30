@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.awt.print.Book;
 import java.util.List;
 
+
 @Service
 public class BooksQueryServiceImpl  implements BookQueryService {
 
@@ -17,7 +18,11 @@ public class BooksQueryServiceImpl  implements BookQueryService {
     public BooksQueryServiceImpl(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
-
+    /**
+     * Query handler to get all books
+     * @param query containing book details
+     *  @return List<Books>
+     * */
     @Override
     public List<Books> handle(GetAllBooksQuery query) {
         return bookRepository.findAll();

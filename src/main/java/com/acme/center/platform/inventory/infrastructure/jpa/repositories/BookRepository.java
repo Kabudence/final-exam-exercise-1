@@ -10,5 +10,4 @@ import org.springframework.stereotype.Repository;
 public interface BookRepository extends JpaRepository<Books, Long> {
 
     boolean existsByIsbn(String isbn);
-    boolean existsByStatus(BookStatus status);
 }

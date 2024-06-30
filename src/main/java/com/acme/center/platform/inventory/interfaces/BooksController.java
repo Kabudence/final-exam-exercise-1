@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,8 +31,8 @@ public class BooksController {
         this.bookQueryService = bookQueryService;
     }
 
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')")
     @PostMapping
-
     public ResponseEntity<BooksResource> createBooks(@RequestBody CreateBooksResource resource) {
         var createCommand= CreateCommandFromResource.toCommandFromResource(resource);
         var bookEntity=bookCommandService.handle(createCommand);
@@ -40,7 +41,7 @@ public class BooksController {
         return new ResponseEntity<>(bookResource, HttpStatus.CREATED);
 
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN' || 'ROLE_LIBRARIAN')")
     @PutMapping("/{bookId}")
     public ResponseEntity<BooksResource> updateBooks(@PathVariable Long bookId, @RequestBody UpdateBooksResource resource) {
         var updateCommand= UpdateCommandFromResource.toCommandFromResource(resource);
@@ -51,7 +52,7 @@ public class BooksController {
 
 
     }
-
+    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<List<BooksResource>> getAllBooks() {
         var getAllBooksQuery = new GetAllBooksQuery();

@@ -6,6 +6,7 @@ import com.acme.center.platform.inventory.domain.model.commands.UpdateBooksComma
 import com.acme.center.platform.inventory.domain.model.valueobjects.BookStatus;
 import com.acme.center.platform.inventory.domain.services.BookCommandService;
 import com.acme.center.platform.inventory.infrastructure.jpa.repositories.BookRepository;
+import com.acme.center.platform.inventory.infrastructure.jpa.repositories.GenreRepository;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Book;
@@ -16,9 +17,11 @@ import java.util.Optional;
 public class BooksCommandServiceImpl implements BookCommandService {
 
     private final BookRepository bookRepository;
+    private final GenreRepository genreRepository;
 
-    public BooksCommandServiceImpl(BookRepository bookRepository) {
+    public BooksCommandServiceImpl(BookRepository bookRepository, GenreRepository genreRepository) {
         this.bookRepository = bookRepository;
+        this.genreRepository = genreRepository;
     }
 
 /**
@@ -29,7 +32,8 @@ public class BooksCommandServiceImpl implements BookCommandService {
     @Override
     public Optional<Books> handle(CreateBooksCommand command) {
         validation(command.isbn(), command.publishedDate(), command.status());
-        var bookEntity=new Books(command);
+        var genre = genreRepository.findByName(command.genreType());
+        var bookEntity=new Books(command,genre.get());
         bookRepository.save(bookEntity);
         return Optional.of(bookEntity);
 
@@ -61,13 +65,11 @@ public class BooksCommandServiceImpl implements BookCommandService {
       **/
     private void validation(String isbn, Date date, BookStatus status) {
         Date currentDate = new Date();
-        if(bookRepository.existsByIsbn(isbn))
+        if (bookRepository.existsByIsbn(isbn))
             throw new IllegalArgumentException("Books with same isbn already exists");
-        if(date.before(currentDate)|| date.equals(currentDate))
-            throw new IllegalArgumentException("The publishDate cannot be before or equal them currentDate");
-        if(bookRepository.existsByStatus(status))
-            throw new IllegalArgumentException("Status with same name not exists");
-    }
+        if(!(date.before(currentDate)|| date.equals(currentDate)))
+          throw new IllegalArgumentException("The publishDate cannot be before or equal them currentDate");
 
+    }
 
 }

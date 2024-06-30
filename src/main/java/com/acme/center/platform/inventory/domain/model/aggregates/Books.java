@@ -7,6 +7,7 @@ import com.acme.center.platform.inventory.domain.model.valueobjects.BookStatus;
 import com.acme.center.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
@@ -32,12 +33,11 @@ public class Books extends AuditableAbstractAggregateRoot<Books> {
     private String author;
 
     @Getter
-    @NotBlank
+    @NotNull
     private Date publishedDate;
 
     @Getter
     @Enumerated(EnumType.STRING)
-    @NotBlank
     private BookStatus status;
 
     @JoinColumn(name = "genre_id")
@@ -57,6 +57,17 @@ public class Books extends AuditableAbstractAggregateRoot<Books> {
         this.genre = new Genre(command.genreType());
 
     }
+
+    public Books (CreateBooksCommand command,Genre genre){
+        this.isbn = command.isbn();
+        this.title = command.title();
+        this.author = command.author();
+        this.publishedDate = command.publishedDate();
+        this.status = command.status();
+        this.genre = genre;
+
+    }
+
 
     /**
      * Updates the book information
